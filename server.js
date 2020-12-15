@@ -4,7 +4,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import Cards from './models/dbCards.js'
-
+import Cors from 'cors'
 
 // Config
 const app = express();
@@ -12,7 +12,8 @@ const port = process.env.PORT || 8001
 const connection_url = 'mongodb+srv://gameradmin:s5VHDfyiGwP6GsXs@cluster0.flceg.mongodb.net/gamermatchdb?retryWrites=true&w=majority'
 
 //Middleware
-
+app.use(express.json());
+app.use(Cors());
 
 //DB config // connect to database
 mongoose.connect(connection_url, {
