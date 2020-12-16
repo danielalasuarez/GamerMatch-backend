@@ -1,6 +1,6 @@
 //NOTE: in the package.json we added "type": "module" in order to get ES6 and be able to use import instead of require
 //we also added the start script for deployment on heroku
-
+import "dotenv/config.js";
 import express from 'express'
 import mongoose from 'mongoose'
 import Cards from './models/dbCards.js'
@@ -9,17 +9,21 @@ import Cors from 'cors'
 // Config
 const app = express();
 const port = process.env.PORT || 8001
-const connection_url = 'mongodb+srv://gameradmin:s5VHDfyiGwP6GsXs@cluster0.flceg.mongodb.net/gamermatchdb?retryWrites=true&w=majority'
+// const connection_url = 'mongodb+srv://gameradmin:s5VHDfyiGwP6GsXs@cluster0.flceg.mongodb.net/gamermatchdb?retryWrites=true&w=majority'
 
 //Middleware
 app.use(express.json());
 app.use(Cors());
 
-//DB config // connect to database
-mongoose.connect(connection_url, {
+//DataBase config // connect to database
+// mongoose.connect(connection_url, {
+    mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+}, (err) => {
+    if (err) throw err;
+    console.log("MONGODB CONNECTION WORKING")
 })
 
 //API endpoints
