@@ -1,5 +1,5 @@
 //NOTE: in the package.json we added "type": "module" in order to get ES6 and be able to use import instead of require
-//we also added the start script
+//we also added the start script for deployment on heroku
 
 import express from 'express'
 import mongoose from 'mongoose'
@@ -24,6 +24,7 @@ mongoose.connect(connection_url, {
 
 //API endpoints
 
+//test route
 app.get('/', (req, res) => res.status(200).send('working'));
 
 //post will push this info into the db 
