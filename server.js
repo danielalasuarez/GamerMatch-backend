@@ -10,14 +10,13 @@ import userRouter from './routers/userRouter.js'
 // Config
 const app = express();
 const port = process.env.PORT || 8001
-// const connection_url = 'mongodb+srv://gameradmin:s5VHDfyiGwP6GsXs@cluster0.flceg.mongodb.net/gamermatchdb?retryWrites=true&w=majority'
+
 
 //Middleware
 app.use(express.json());
 app.use(Cors());
 
 //DataBase config // connect to database
-// mongoose.connect(connection_url, {
     mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useCreateIndex: true,
