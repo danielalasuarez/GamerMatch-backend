@@ -33,7 +33,7 @@ app.use('/profile', userRouter);
 //API endpoints
 
 //test route
-app.get('/', (req, res) => res.status(200).send('working'));
+app.get('/', (req, res) => res.status(200).send('working!!!!'));
 
 //post will push this info into the db 
 app.post('/gamers/cards', (req, res) =>{

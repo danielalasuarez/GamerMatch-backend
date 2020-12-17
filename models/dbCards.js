@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
 const cardSchema = mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-    imgUrl: String,
-    killDeathRatio: String,
-    gameHighlights: String
+    name: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    imgUrl: { type: String },
+    killDeathRatio: { type: String },
+    gameHighlights: { type: String }
 
      
 
