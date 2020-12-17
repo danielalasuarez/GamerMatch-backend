@@ -112,7 +112,7 @@ if (!pwordMatch)
             name: user.name,
             email: user.email,
         },
-    })    
+    })    //the token the jwot returns an ancoded piece of code that stores the validation for log in 
 
 
     }catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
