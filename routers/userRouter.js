@@ -164,5 +164,16 @@ res.json(deletedUser); //send to front end
     }
  })
 
+//==============================================================================
+// get route that will get information about a single user 
+//==============================================================================
+//will get the user info of the user that is already logged in 
+//use auth as a param because we can only get data for a user that is currently logged in and authenticated 
+router.get("/", auth, async (req,res) => {
+    const user = await Cards.findById(req.user); //because I used auth I can now get the id from req.user
+    res.json(user)
+})
+
+
 export default router;
 
