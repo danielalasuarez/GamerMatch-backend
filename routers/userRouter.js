@@ -1,10 +1,13 @@
-// import "dotenv/config.js";
 import express from 'express'
 var router = express.Router();
 import Cards from '../models/dbCards.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
+import auth from '../middleware/auth.js'
 
+//==============================================================================
+// POST ROUTES TO REGISTER AND LOG IN
+//==============================================================================
 
 
 // router.get("/", (req,res) => {
@@ -119,5 +122,23 @@ if (!pwordMatch)
         res.status(500).json({error: err.message});
     }
 })
+
+//==============================================================================
+// DELETE ROUTE this will allow you to delete your account 
+//==============================================================================
+//this function will only run once JWOT is validated and the user is logged in
+//pass auth middleware as a second param 
+router.delete("/delete", auth, async (req,res) => {
+// console.log(req.user); //worked the delete now recongnizes the user 
+try {
+
+const deletedUser = await Cards.findByIdAndDelete(req.user); //gets the id we got from the jwot finds it in the db and deltes the id 
+res.json(deletedUser); //send to front end 
+
+} catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
+    res.status(500).json({error: err.message});
+}
+})
+
 export default router;
 
