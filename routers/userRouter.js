@@ -113,7 +113,7 @@ if (!pwordMatch)
         user: {
             id: user._id,
             name: user.name,
-            email: user.email,
+            // email: user.email, //not going to send the email in the token so it wont be exposed on front end 
         },
     })    //the token the jwot returns an ancoded piece of code that stores the validation for log in 
 
