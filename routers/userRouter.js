@@ -17,9 +17,10 @@ router.post("/register", async (req, res) =>{
     // res.send("working bb") //this route /profile/register is working but the below code only works if res.send is commented out
     //res.send automatically stops the below code from running!
     try{
+        //had to use array because I had it in an array on postman.. it works without the array see below code 
 // const{name, email, password, imgUrl, killDeathRatio, gameHighlights} = req.body[0]; // this will create 6 variables with all of the values stored in the db 
 // console.log(req.body[0].name)
-const{name, email, password, imgUrl, killDeathRatio, gameHighlights} = req.body;
+let {name, email, password, imgUrl, killDeathRatio, gameHighlights} = req.body; //chnaged to let because if not it will throw an error when you dont add the variables that are not required 
 console.log(name)
 //validate if the user submitted a name email and password because they cant move forward without
 if(!name || !email || !password) 
@@ -63,9 +64,9 @@ const newUser = new Cards({
 //below function will save the const NewUser to the DB
 //we use await bc save()is an async operation
 const savedUser = await newUser.save()
-res.json(savedUser) //sending saved user to the front end
+res.json(savedUser) //sending saved user to the front
 } catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
-        res.status(500).json(err);
+        res.status(500).json({error: err.message});
     }
 })
 export default router;
