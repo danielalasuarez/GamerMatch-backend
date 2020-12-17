@@ -1,18 +1,23 @@
+// import "dotenv/config.js";
 import express from 'express'
 var router = express.Router();
 import Cards from '../models/dbCards.js'
 import bcrypt from 'bcryptjs';
-// const router = require("express").Router();
-// const router = express().Router();
-// router.use(auth);
-// export default router = Router()
+import jwt from 'jsonwebtoken'
+
+
 
 // router.get("/", (req,res) => {
 //     res.send("This is working");
 //     console.log("router working") //only works on local backend for now on /profile
 // })
 
-//asyn so we can save to mongodb
+
+
+//==============================================================================
+// REGISTER POST ROUTE (CREATE PROFILE WHICH WILL APPEAR ON CARD)
+//==============================================================================
+//async so we can save to mongodb
 router.post("/register", async (req, res) =>{
     // res.send("working bb") //this route /profile/register is working but the below code only works if res.send is commented out
     //res.send automatically stops the below code from running!
@@ -28,6 +33,7 @@ return res.status(400).json({msg: "You have to add your GamerTag, Email, and Pas
 
 const existingUser = await Cards.findOne({email: email}) //look in data base and see if the email there matches the email variable we have here on line 22
 // console.log(existingUser)
+//needs to be findOne not find because if not it will look through all of the vars
 //await is for us to wait to see if mongo finds the user 
 //if it finds one it will store it in existingUser if not it will be null 
 if (existingUser) 
@@ -43,6 +49,7 @@ return res.status(400).json({msg: "An account with this name is already in use"}
 //if (existingName) stays null then we can continue
 
 //if the unrequired parts are not filled then we will put temporary things in their place
+//works when you changed the object with all the variables from const to let 
 if (!imgUrl) imgUrl = "This Gamer hasn't added a picture";
 if (!killDeathRatio) killDeathRatio = "This Gamer hasn't added thier KDR";
 if (!gameHighlights) gameHighlights = "Game Highlights unavailable at this time";
@@ -66,6 +73,49 @@ const newUser = new Cards({
 const savedUser = await newUser.save()
 res.json(savedUser) //sending saved user to the front
 } catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
+        res.status(500).json({error: err.message});
+    }
+})
+
+
+//==============================================================================
+// LOGIN POST ROUTE (SESSION)
+//==============================================================================
+
+router.post("/login", async (req,res) => {
+    try {
+let {email, password} = req.body; //same thing as above but to login we only need email & pword
+
+//validate
+if (!email || !password)
+return res.status(400).json({msg: "Not all fields have been entered!"});
+
+//validate if the password inputted belongs to the account with this email
+ const user = await Cards.findOne({email: email});
+if(!user) // if user doesnt exist
+return res.status(400).json({msg: "There is no account registered with this email, please register!"});
+
+//make sure passwords match 
+//comparing bcrypt hashed pword to the password in the req.body 
+const pwordMatch = await bcrypt.compare(password, user.password)
+if (!pwordMatch)
+    return res.status(400).json({msg: "Invalid credentials"});
+
+    //if the above if statement didnt trigger then ..
+    //we use the _id that mongo gives us when we post to the db 
+    //each id is associated with each user and is a point to which use has been logged in
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET); // jwt stores whihc user has been logged in
+    res.json({ //sending some info about this user to the front end (we get this from when they registered)
+        token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        },
+    })    
+
+
+    }catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
         res.status(500).json({error: err.message});
     }
 })
