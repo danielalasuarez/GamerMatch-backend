@@ -171,7 +171,11 @@ res.json(deletedUser); //send to front end
 //use auth as a param because we can only get data for a user that is currently logged in and authenticated 
 router.get("/", auth, async (req,res) => {
     const user = await Cards.findById(req.user); //because I used auth I can now get the id from req.user
-    res.json(user)
+    // res.json(user) //this has the hashed password and it shows up in the inspect so we are going to send just the name and the email
+    res.json({
+        name: user.name,
+        id: user._id ,
+    })
 })
 
 
