@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 //not async because we only want to auth the login we dont need to check if user exist in db
 const auth = (req, res, next) => { //next is for when auth completed
     try {
-    const token = req.header("ex-auth-token"); //stores token 
+    const token = req.header("ex-auth-token"); //get&stores token 
     if(!token) //if token hasnt been given (if not logged in)
         return res.status(401).json({msg: "No auth token, auth denied"}); //not allowed to move forward to NEXT
 

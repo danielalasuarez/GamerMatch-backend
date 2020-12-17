@@ -138,7 +138,31 @@ res.json(deletedUser); //send to front end
 } catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
     res.status(500).json({error: err.message});
 }
-})
+});
+
+//==============================================================================
+// route that will say true or false if token is valid 
+//==============================================================================
+//same as auth middleware but will only say true or false wont return all of the errors we have set up in auth
+//will allow us to tell the front end if you are logged in or not 
+ router.post("/tokenIsValid", async (req, res) => {
+    try{
+        const token = req.header("ex-auth-token"); //get&stores token 
+        if(!token) return res.json(false); //if not token return false 
+
+        //verify jwt
+        const verified = jwt.verify(token,process.env.JWT_SECRET)
+        if(!verified) return res.json(false) // if the token hasnt been verified return false 
+
+        //verify that user exist in db 
+        const user = await Cards.findById(verified.id);
+        if(!user) return res.json(false) //if the user is not found in db then return false 
+
+        else return res.json(true);
+    } catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
+        res.status(500).json({error: err.message});
+    }
+ })
 
 export default router;
 
