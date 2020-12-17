@@ -50,6 +50,20 @@ if (!gameHighlights) gameHighlights = "Game Highlights unavailable at this time"
 const salt = await bcrypt.genSalt();
 const passwordHash = await bcrypt.hash(password, salt) //will return hashed pword 
 console.log(passwordHash)
+
+//new model... everything stays the same except the password will now be hashed
+const newUser = new Cards({
+    name,
+    email,
+    password: passwordHash,
+    imgUrl,
+    killDeathRatio,
+    gameHighlights
+});
+//below function will save the const NewUser to the DB
+//we use await bc save()is an async operation
+const savedUser = await newUser.save()
+res.json(savedUser) //sending saved user to the front end
 } catch (err) { //if the try block fails then we send 500 error and we send it to the front end in case we need it 
         res.status(500).json(err);
     }
